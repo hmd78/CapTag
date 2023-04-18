@@ -7,6 +7,7 @@ import sys
 import open_clip
 import time
 import os
+from transformers import BertModel, BertConfig, BertTokenizerFast, AutoConfig, AutoTokenizer, AutoModel
 
 from io import BytesIO
 from typing import Optional, List
@@ -17,6 +18,7 @@ import pickle
 from dimention_reduction import TwoLayerClassifier
 
 import torchvision.transforms as T
+transform = T.ToPILImage()
 
 class ImageFeatureExtractor:
     # feature extraction from images
@@ -34,16 +36,13 @@ class ImageFeatureExtractor:
         self.feature_reduction_model.eval()
         self.feature_reduction_model.to(self.device)
 
-    def _read(img_or_path):
+    def _read(self, img_or_path):
         """Read an image.
         Args:
             img_or_path (ndarray or str or Path)
         Returns:
             ndarray: Loaded image array.
         """
-
-        if isinstance(img_or_path, Path):
-            img_or_path = str(img_or_path)
 
         if isinstance(img_or_path, np.ndarray):
             return img_or_path
@@ -52,6 +51,9 @@ class ImageFeatureExtractor:
             img = Image.open(img_or_path)
             img = np.array(img)
             return img
+        
+        else:
+            print("error reading image")
 
     def resize_flatten(self, images, size = (100,100)):
         # simple resizeing and flattening images as features
@@ -70,8 +72,14 @@ class ImageFeatureExtractor:
 
     def image_feature_extractor(self, payload):
 
+        if type(payload) != list:
+            payload = [payload]
+        else:
+            pass
+
         images = []
-        for img in payload:
+        for imge in payload:
+            img = self._read(imge)
             img = transform(img)
             img = self.clip_preprocess(img).unsqueeze(0)
             images.append(img.cpu().numpy()[0])
@@ -86,9 +94,7 @@ class ImageFeatureExtractor:
 
         return image_features.cpu().numpy()
 
-
-
-class TextFeatureExtractionService:
+class TextFeatureExtractor:
 
     def __init__(self):
 
