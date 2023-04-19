@@ -1,5 +1,5 @@
 import base64
-import IPython
+# import IPython
 import json
 import numpy as np
 import os
@@ -9,9 +9,10 @@ from io import BytesIO
 from math import trunc
 from PIL import Image as PILImage
 from PIL import ImageDraw as PILImageDraw
-from IPython.display import display, Image
+# from IPython.display import display, Image
 import matplotlib.pyplot as plt
 from collections import Counter
+import argparse
 
 class DatasetReport():
     def __init__(self, annotation_path, image_dir):
