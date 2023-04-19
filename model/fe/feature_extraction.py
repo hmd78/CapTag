@@ -162,20 +162,29 @@ class CLIP:
         # download pre-trained models
         # self.vision_encoder = CLIPVisionModel.from_pretrained('SajjadAyoubi/clip-fa-vision')
         # torch.save(self.vision_encoder,'saved_models/vision_encoder.pth')
+        # self.vision_encoder.save_pretrained('saved_models/clip/vision')
 
         # self.preprocessor = CLIPFeatureExtractor.from_pretrained('SajjadAyoubi/clip-fa-vision')
         # torch.save(self.preprocessor,'saved_models/vision_preprocessor.pth')
+        # self.preprocessor.save_pretrained('saved_models/clip/vision')
 
         # self.text_encoder = RobertaModel.from_pretrained('SajjadAyoubi/clip-fa-text')
         # torch.save(self.text_encoder,'saved_models/text_encoder.pth')
+        # self.text_encoder.save_pretrained("./saved_models/clip/text")
         # self.tokenizer = AutoTokenizer.from_pretrained('SajjadAyoubi/clip-fa-text')
-        # self.tokenizer.save_pretrained("./saved_models/tokenizer/")
+        # self.tokenizer.save_pretrained("./saved_models/clip/text")
 
-        # load models locally TODO: dont save with configs
-        self.vision_encoder = torch.load('saved_models/vision_encoder.pth')
-        self.preprocessor = torch.load('saved_models/vision_preprocessor.pth')
-        self.text_encoder = torch.load('saved_models/text_encoder.pth')
-        self.tokenizer = AutoTokenizer.from_pretrained("./saved_models/tokenizer/")
+        # load models locally with config
+        # self.vision_encoder = torch.load('saved_models/vision_encoder.pth')
+        # self.preprocessor = torch.load('saved_models/vision_preprocessor.pth')
+        # self.text_encoder = torch.load('saved_models/text_encoder.pth')
+        # self.tokenizer = AutoTokenizer.from_pretrained("./saved_models/tokenizer/")
+
+        # load models locally 
+        self.vision_encoder = CLIPVisionModel.from_pretrained('saved_models/clip/vision')
+        self.preprocessor = CLIPFeatureExtractor.from_pretrained('saved_models/clip/vision')
+        self.text_encoder = RobertaModel.from_pretrained('./saved_models/clip/text')
+        self.tokenizer = AutoTokenizer.from_pretrained('./saved_models/clip/text')
 
         
 
