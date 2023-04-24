@@ -32,9 +32,10 @@ def main():
     model.to(device)
 
     model.train()
+    loss_min = 1000
 
     for epoch in range(args.epochs):
-        print("Epoch:", epoch)
+        print("Epoch:", epoch+1)
         for idx, batch in enumerate(train_dataloader):
             input_ids = batch.pop("input_ids").to(device)
             pixel_values = batch.pop("pixel_values").to(device)
@@ -45,14 +46,19 @@ def main():
             
             loss = outputs.loss
 
-            print("Loss:", loss.item())
+            print(f"Epoch:  {epoch+1},   Batch:[{idx+1}/{len(train_dataloader)}],Loss:  {loss.item()}")
+            if loss.item() < loss_min:
+                print('========================================')
+                print('Found a lower loss, saving model ....')
+                model.save_pretrained(args.work_dir)
+                print('Model saved !!')
+                print('========================================')
+
 
             loss.backward()
 
             optimizer.step()
             optimizer.zero_grad()
-    
-    model. save_model(args.work_dir)
 
 
 
