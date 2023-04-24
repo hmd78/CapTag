@@ -30,7 +30,10 @@ def extract_mask(annFile, mask_dir, dataset_prefix):
       Path(os.path.join(mask_dir,coco.loadCats(cat)[0]['name'])).mkdir(parents=True, exist_ok=True)
 
   for ann in tqdm(annsIds):
-      mask = coco.annToMask(coco.loadAnns(ann)[0])
+      try:
+        mask = coco.annToMask(coco.loadAnns(ann)[0])
+      except Exception as e:
+         print(e)
       gt_bbox = coco.loadAnns(ann)[0]['bbox']
 
       file_path = os.path.join(mask_dir,coco.loadCats(coco.loadAnns(ann)[0]['category_id'])[0]['name'],'id_'+str(ann)+ '_' + coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'].split('/')[-1])
