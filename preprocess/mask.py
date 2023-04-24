@@ -13,13 +13,14 @@ def parse_args():
     parser = argparse.ArgumentParser(description='extract segmentation  masks from original images')
     parser.add_argument('--annotation', help='path to json coco format annotation file')
     parser.add_argument('--mask-dir', help='directory where masks are saved')
+    parser.add_argument('--dataset-dir', help='directory where original images are saved')
     
     args = parser.parse_args()
 
     return args
 
 
-def extract_mask(annFile, mask_dir):
+def extract_mask(annFile, mask_dir, dataset_prefix):
   coco=COCO(annFile)
 
   catIds = coco.getCatIds()
@@ -35,7 +36,7 @@ def extract_mask(annFile, mask_dir):
       file_path = os.path.join(mask_dir,coco.loadCats(coco.loadAnns(ann)[0]['category_id'])[0]['name'],'id_'+str(ann)+ '_' + coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'].split('/')[-1])
       # image.imsave(file_path, mask)
 
-      org = Image.open(coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'])
+      org = Image.open(dataset_prefix+coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'])
       # print(coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'])
       # print(file_path)
       mask = np.expand_dims(mask, axis=-1)
