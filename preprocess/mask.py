@@ -48,7 +48,7 @@ def extract_mask(annFile, mask_dir, dataset_prefix):
     
 def main():
     args = parse_args()
-    extract_mask(args.annotation, args.mask_dir)
+    extract_mask(args.annotation, args.mask_dir, args.dataset_dir)
 
 
 if __name__ == '__main__':
