@@ -15,7 +15,7 @@ import asyncio
 import copy
 import pickle
 
-from dimention_reduction import TwoLayerClassifier
+from .dimention_reduction import TwoLayerClassifier
 
 import torchvision.transforms as T
 transform = T.ToPILImage()
@@ -235,3 +235,17 @@ class CLIP:
             text_embedding = self.text_encoder(**self.tokenizer(text, return_tensors='pt')).pooler_output
             features.append(text_embedding)
         return features
+
+    # def text_query_embedding(self, query: str = 'موز'):
+    #     tokens = self.tokenizer(query, return_tensors='pt')
+    #     with torch.no_grad():
+    #         text_embedding = self.text_encoder(input_ids=tokens["input_ids"].to(self.device),
+    #                                            attention_mask=tokens["attention_mask"].to(self.device)).pooler_output
+    #     return text_embedding
+
+    # def image_query_embedding(self, image):
+    #     image = VisionDataset.preprocess(image).unsqueeze(0)
+    #     with torch.no_grad():
+    #         image_embedding = self.vision_encoder(
+    #             image.to(self.device)).pooler_output
+    #     return image_embedding

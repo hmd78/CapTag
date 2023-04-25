@@ -5,7 +5,7 @@ import gc
 import multiprocessing
 from transformers import CLIPConfig, CLIPModel
 
-from ..config import MEAN, STD, tokenizer
+from config import MEAN, STD, tokenizer
 
 
 def clear_gpu():

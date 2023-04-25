@@ -4,10 +4,10 @@ import torch
 import os
 
 
-from .utils import clear_gpu, optimal_workers
-from .model import clip
-from .data import train_ds, test_ds
-from ..config import args, tokenizer, vision_preprocessor
+from utils import clear_gpu, optimal_workers
+from model import clip
+from data import CapDataloader
+from config import args, tokenizer, vision_preprocessor
 
 
 class CLIPTrainer(Trainer):
@@ -31,6 +31,8 @@ if __name__ == '__main__':
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     clear_gpu()
     args.dataloader_num_workers = optimal_workers()
+    train_ds = CapDataloader("./dataset/train/train_anno.json", mode='train')
+    test_ds = CapDataloader("./dataset/train/train_anno.json", mode='test')
     trainer = CLIPTrainer(clip, args,
                           train_dataset=train_ds,
                           eval_dataset=test_ds,

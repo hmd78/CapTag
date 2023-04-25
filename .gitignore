@@ -1,2 +1,4 @@
 dataset
 saved_models
+**/__pycache__
+masks

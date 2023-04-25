@@ -1,8 +1,8 @@
 from transformers import AutoModel, CLIPVisionModel
 
-from ..config import TEXT_MODEL, IMAGE_MODEL
-from .utils import clip_wraper_creator
-from .data import item
+from config import TEXT_MODEL, IMAGE_MODEL
+from utils import clip_wraper_creator
+# from data import item
 
 
 vision_encoder = CLIPVisionModel.from_pretrained(IMAGE_MODEL)
@@ -14,13 +14,13 @@ clip.text_model = text_encoder
 clip.vision_model = vision_encoder
 
 
-if __name__ == '__main__':
-    out = clip(input_ids=item['input_ids'],
-               attention_mask=item['attention_mask'],
-               pixel_values=item['pixel_values'],
-               return_loss=True)
+# if __name__ == '__main__':
+#     out = clip(input_ids=item['input_ids'],
+#                attention_mask=item['attention_mask'],
+#                pixel_values=item['pixel_values'],
+#                return_loss=True)
 
-    print('text and image embeddings: ',
-          out.text_embeds.shape, out.image_embeds.shape)
-    print('loss: ', out.loss)
-    del out, item,
+#     print('text and image embeddings: ',
+#           out.text_embeds.shape, out.image_embeds.shape)
+#     print('loss: ', out.loss)
+#     del out, item,

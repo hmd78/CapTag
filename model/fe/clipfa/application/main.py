@@ -95,6 +95,19 @@ class CLIPDemo:
         values, indices = torch.cosine_similarity(
             embeddings_1, embeddings_2).sort(descending=True)
         return values.cpu(), indices.cpu()
+    
+    def image_to_image_search(self, image_path: str, top_k=10):
+        image = Image.open(image_path)
+        image_embedding = self.image_query_embedding(image)
+        _, indices = self.most_similars(self.image_embeddings_, image_embedding)
+
+        matches = np.array(self.image_paths)[indices][:top_k]
+        _, axes = plt.subplots(2, int(top_k/2), figsize=(15, 5))
+        for match, ax in zip(matches, axes.flatten()):
+            ax.imshow(Image.open(match).resize((224, 224)))
+            ax.axis("off")
+        plt.show()
+
 
     def zero_shot(self, image_path: str):
         """ Zero shot image classification with label list 
