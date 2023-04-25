@@ -64,7 +64,7 @@ class CapDataloader(Dataset):
         x = pd.merge(x, self.anns_cat, left_on='category_id', right_on='id')
         x['file_name'] = x['file_name'].apply(self.change_file_names)
         x['id_x'] = x['id_x'].map(str)
-        x['file_name'] = x.agg(lambda x: './masks/'+ x['name'] + '/' + 'id'+ x['id_x'] +'_' + x['file_name'], axis=1)
+        x['file_name'] = x.agg(lambda x: './masks/'+ x['name'] + '/' + 'id_'+ x['id_x'] +'_' + x['file_name'], axis=1)
         x['tags'] =x['tags'].apply(self.concat_tags)
         return x
 
