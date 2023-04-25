@@ -30,23 +30,24 @@ def extract_mask(annFile, mask_dir, dataset_prefix):
       Path(os.path.join(mask_dir,coco.loadCats(cat)[0]['name'])).mkdir(parents=True, exist_ok=True)
 
   for ann in tqdm(annsIds):
-      try:
+    try:
         mask = coco.annToMask(coco.loadAnns(ann)[0])
-      except Exception as e:
+      
+        gt_bbox = coco.loadAnns(ann)[0]['bbox']
+
+        file_path = os.path.join(mask_dir,coco.loadCats(coco.loadAnns(ann)[0]['category_id'])[0]['name'],'id_'+str(ann)+ '_' + coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'].split('/')[-1])
+        # image.imsave(file_path, mask)
+
+        org = Image.open(dataset_prefix+coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'])
+        # print(coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'])
+        # print(file_path)
+        mask = np.expand_dims(mask, axis=-1)
+        masked_image = np.multiply(org, mask)
+        cropped_image = masked_image[max(int(gt_bbox[1]), 0):min(int(gt_bbox[1]+gt_bbox[3]), masked_image.shape[0]), max(int(gt_bbox[0]), 0):min(int(gt_bbox[0]+gt_bbox[2]), masked_image.shape[1]),  :]
+        im = Image.fromarray(masked_image)
+        im.save(file_path)
+    except Exception as e:
          print(e)
-      gt_bbox = coco.loadAnns(ann)[0]['bbox']
-
-      file_path = os.path.join(mask_dir,coco.loadCats(coco.loadAnns(ann)[0]['category_id'])[0]['name'],'id_'+str(ann)+ '_' + coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'].split('/')[-1])
-      # image.imsave(file_path, mask)
-
-      org = Image.open(dataset_prefix+coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'])
-      # print(coco.loadImgs(coco.loadAnns(ann)[0]['image_id'])[0]['file_name'])
-      # print(file_path)
-      mask = np.expand_dims(mask, axis=-1)
-      masked_image = np.multiply(org, mask)
-      cropped_image = masked_image[max(int(gt_bbox[1]), 0):min(int(gt_bbox[1]+gt_bbox[3]), masked_image.shape[0]), max(int(gt_bbox[0]), 0):min(int(gt_bbox[0]+gt_bbox[2]), masked_image.shape[1]),  :]
-      im = Image.fromarray(masked_image)
-      im.save(file_path)
 
     
 def main():
