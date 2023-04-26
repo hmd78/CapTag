@@ -22,6 +22,50 @@ STD = torch.tensor([0.26862954, 0.26130258, 0.27577711])
 #data
 class CapDataloader(Dataset):
     def __init__(self, annotation, mode: str = 'train'):
+        self.cats = {
+                        "body":"بادی",
+                        "top":"تاپ",
+                        "t-shirt":"تیشرت",
+                        "jumpsuit": "سرهمی",
+                        "socks": "جوراب",
+                        "skirt":"دامن",
+                        "earrings":"گوشواره",
+                        "bracelet":"دستبند",
+                        "ring":"انگشتر",
+                        "necklace":"گردنبند",
+                        "anklet":"پابند",
+                        "glove":"دستکش",
+                        "wristlet":"مچبند",
+                        "watch":"ساعت",
+                        "luggage":"ساک",
+                        "bra":"سوتین",
+                        "sweatshirt":"ژاکت",
+                        "scarf":"شال",
+                        "pants":"شلوار",
+                        "shorts":"شلوارک",
+                        "underwear":"لباس زیر",
+                        "glasses":"عینک",
+                        "dress": "لباس مجلسی",
+                        "manto":"مانتو",
+                        "swimsuit":"مایو",
+                        "hoodie":"هودی",
+                        "pullover":"پلیور",
+                        "vest":"وست",
+                        "pancho":"پانچو",
+                        "shirt":"پیراهن مردانه",
+                        "chador":"چادر",
+                        "jacket":"کاپشن",
+                        "tie":"کروات",
+                        "shoe":"کفش",
+                        "boot":"بوت",
+                        "hat":"کلاه",
+                        "belt":"کمربند",
+                        "bag":"کیف",
+                        "backpack":"کوله پشتی",
+                        "COAT":"کت",
+                        "shomiz":"شومیز"
+                    }
+
         with open(annotation, 'rt') as annotations:
             coco = json.load(annotations)
         self.anns_img = pd.json_normalize(coco['images'])
@@ -75,13 +119,16 @@ class CapDataloader(Dataset):
         x['file_name'] = x['file_name'].apply(self.change_file_names)
         x['id_x'] = x['id_x'].map(str)
         x['file_name'] = x.agg(lambda x: './masks/'+ x['name'] + '/' + 'id_'+ x['id_x'] +'_' + x['file_name'], axis=1)
+        # x = x.drop(x[x['id_x'] == '17003'].index)
+        x = x.dropna()
         x['tags'] =x['tags'].apply(self.concat_tags)
+        x['tags'] = x.agg(lambda x: self.cats[x['name']] + ',' + x['tags'], axis=1)
         return x
 
 train_ds = CapDataloader('./dataset/train/train_anno.json')
 df = train_ds.dataset
 
-mydf = df.iloc[list(df['name'] == 'backpack')]
+mydf = df.iloc[list(df['name'] == 'manto')]
 
 texts = mydf['tags'].tolist()
 images = mydf['file_name'].tolist()
@@ -91,7 +138,8 @@ print(len(images), len(texts))
 
 model.compute_embeddings(images, texts)
 
-model.image_to_image_search('/home/art/Code/CapTag/masks/backpack/id_3046_323315514_729127388360668_7622663888704689854_nXQK7P7QZFDJEFVT3V6S2_cc70.jpg')
+model.image_to_image_search('/home/art/Code/CapTag/masks/manto/id_336_324719832_911835690260307_1627614184832298502_n53EG0VTTI8DNBTA90HJ3_ebd4.jpg')
 
 
-model.text_to_image_search('فانتزی اسپرت زنانه')
+model.text_to_image_search('جین کتی دخترانه عروسکی')
+model.text_to_image_search(','.join(['کتی', 'کوتاه', 'یقه انگلیسی','زنانه', 'هنری']))
