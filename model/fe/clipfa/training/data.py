@@ -154,11 +154,11 @@ class CLIPDataset(Dataset):
 
 
 # if __name__ == '__main__':
-    dl = CapDataloader("./dataset/train/train_anno.json", mode='train')
-    train_dl = DataLoader(dl, batch_size=2,
-                          collate_fn=default_data_collator)
-    train_ds = dl
-    test_ds = dl 
+    # dl = CapDataloader("./dataset/train/train_anno.json", mode='train')
+    # train_dl = DataLoader(dl, batch_size=2,
+    #                       collate_fn=default_data_collator)
+    # train_ds = dl
+    # test_ds = dl 
  
     # df = pd.read_csv(DATA_FILE)
     # train_df, test_df = train_test_split(df, test_size=TEST_SIZE)
