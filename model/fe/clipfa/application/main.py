@@ -96,7 +96,7 @@ class CLIPDemo:
             embeddings_1, embeddings_2).sort(descending=True)
         return values.cpu(), indices.cpu()
     
-    def image_to_image_search(self, image_path: str, top_k=10):
+    def image_to_image_search(self, image_path: str, top_k=30):
         image = Image.open(image_path)
         image_embedding = self.image_query_embedding(image)
         _, indices = self.most_similars(self.image_embeddings_, image_embedding)

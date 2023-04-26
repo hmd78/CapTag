@@ -44,7 +44,7 @@ def extract_mask(annFile, mask_dir, dataset_prefix):
         mask = np.expand_dims(mask, axis=-1)
         masked_image = np.multiply(org, mask)
         cropped_image = masked_image[max(int(gt_bbox[1]), 0):min(int(gt_bbox[1]+gt_bbox[3]), masked_image.shape[0]), max(int(gt_bbox[0]), 0):min(int(gt_bbox[0]+gt_bbox[2]), masked_image.shape[1]),  :]
-        im = Image.fromarray(masked_image)
+        im = Image.fromarray(cropped_image)
         im.save(file_path)
     except Exception as e:
          print(e)
