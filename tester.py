@@ -9,9 +9,11 @@ import pathlib
 DATA_DIR = pathlib.Path("./dataset/masks/shomiz")
 # print(list(DATA_DIR.glob('*')))
 
+## OpenCLip
 # model = CLIP()
 # simple_clip = CLIPDemo(vision_encoder=model.vision_encoder,text_encoder=model.text_encoder,tokenizer=model.tokenizer)
 
+# clipfa
 TEXT_MODEL = 'saved_models/clip/text'
 IMAGE_MODEL = 'saved_models/clip/vision'
 
