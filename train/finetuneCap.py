@@ -9,8 +9,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Finetune blip captioning')
     parser.add_argument('annotation', help='path to json coco format annotation file')
     parser.add_argument('--work-dir', help='the dir to save models')
+    parser.add_argument('--imgs', help='path to masked images')
     parser.add_argument('--epochs', type=int, default=5)
     parser.add_argument('--batchsize', type=int, default=3)
+
     args = parser.parse_args()
 
     return args
@@ -22,7 +24,7 @@ def main():
     processor = AutoProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
     model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
 
-    train_dataset = CapDataloader(args.annotation, processor)
+    train_dataset = CapDataloader(args.annotation, processor, args.imgs)
     train_dataloader = DataLoader(train_dataset, shuffle=True, batch_size=args.batchsize)
 
     print(f'length of dataset : {len(train_dataset)} , batchsize : {args.batchsize}')
