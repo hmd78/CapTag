@@ -5,7 +5,7 @@ import pandas as pd
 
 
 class CapDataloader(Dataset):
-    def __init__(self, annotation, processor):
+    def __init__(self, annotation, processor, images):
         self.cats = {
                         "body":"بادی",
                         "top":"تاپ",
@@ -51,10 +51,12 @@ class CapDataloader(Dataset):
                     }
         with open(annotation, 'rt') as annotations:
             coco = json.load(annotations)
+        self.images = images
         self.anns_img = pd.json_normalize(coco['images'])
         self.anns_cat = pd.json_normalize(coco['categories'])
         self.anns = pd.json_normalize(coco['annotations'])
         self.dataset = self.preprocess_anns(self.anns)
+        print('this dataset used for train : \n',self.dataset)
         self.processor = processor
         
 
@@ -84,7 +86,7 @@ class CapDataloader(Dataset):
         x = pd.merge(x, self.anns_cat, left_on='category_id', right_on='id')
         x['file_name'] = x['file_name'].apply(self.change_file_names)
         x['id_x'] = x['id_x'].map(str)
-        x['file_name'] = x.agg(lambda x: 'masks/'+ x['name'] + '/' + 'id_'+ x['id_x'] +'_' + x['file_name'], axis=1)
+        x['file_name'] = x.agg(lambda x: self.images+ x['name'] + '/' + 'id_'+ x['id_x'] +'_' + x['file_name'], axis=1)
         x = x.drop(x[x['id_x'] == '17003'].index)
         x = x.dropna()
         x['tags'] =x['tags'].apply(self.concat_tags)
